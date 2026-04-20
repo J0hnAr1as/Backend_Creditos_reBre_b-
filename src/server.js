@@ -17,6 +17,11 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+// 🔹 Ruta raíz
+app.get("/", (req, res) => {
+  res.json({ message: "API Créditos reBre-be funcionando correctamente 🚀" })
+})
+
 // 🔹 Rutas API
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
