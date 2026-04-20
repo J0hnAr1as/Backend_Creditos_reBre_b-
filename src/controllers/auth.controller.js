@@ -23,7 +23,7 @@ export const loginAdmin = async (req, res) => {
       return res.status(401).json({ message: "Credenciales incorrectas" })
     }
 
-    const isValid = await bcrypt.compare(password, user.password)
+    const isValid = await bcrypt.compare(password, user.passwordHash)
 
     if (!isValid) {
       return res.status(401).json({ message: "Credenciales incorrectas" })
@@ -64,7 +64,7 @@ export const loginCobrador = async (req, res) => {
       return res.status(401).json({ message: "Credenciales incorrectas" })
     }
 
-    const isValid = await bcrypt.compare(password, user.password)
+    const isValid = await bcrypt.compare(password, user.passwordHash)
 
     if (!isValid) {
       return res.status(401).json({ message: "Credenciales incorrectas" })
