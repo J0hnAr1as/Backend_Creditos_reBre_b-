@@ -36,6 +36,30 @@ const bot = new TelegramBot(token)
 // Configurar webhook (Telegram enviará mensajes aquí)
 bot.setWebHook(`https://creditos-re-bre-b-backend.vercel.app/api/telegram/${token}`)
 
+bot.onText(/\/crearcliente (.+)/, async (msg, match) => {
+  const chatId = msg.chat.id
+  const params = match[1].split(",") // ejemplo: "Juan Pérez,3001234567,Calle 123"
+
+  if (params.length < 3) {
+    return bot.sendMessage(chatId, "⚠️ Formato inválido. Usa: /crearcliente Nombre,Telefono,Direccion")
+  }
+
+  const [nombre, telefono, direccion] = params.map(p => p.trim())
+
+  try {
+    // Llamada al backend para crear cliente
+    const response = await axios.post("https://creditos-re-bre-b-backend.vercel.app/clientes", {
+      nombre,
+      telefono,
+      direccion
+    })
+
+    bot.sendMessage(chatId, `✅ Cliente creado: ${response.data.nombre}`)
+  } catch (error) {
+    bot.sendMessage(chatId, "❌ Error al crear cliente: " + error.message)
+  }
+})
+
 // Endpoint para recibir mensajes de Telegram
 app.post(`/api/telegram/${token}`, (req, res) => {
   bot.processUpdate(req.body)
