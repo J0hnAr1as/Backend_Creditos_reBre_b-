@@ -48,7 +48,7 @@ bot.onText(/\/crearcliente (.+)/, async (msg, match) => {
 
   try {
     // Llamada al backend para crear cliente
-    const response = await axios.post("https://creditos-re-bre-b-backend.vercel.app/clientes", {
+    const response = await axios.post("https://creditos-re-bre-b-backend.vercel.app/api/clientes", {
       nombre,
       telefono,
       direccion
