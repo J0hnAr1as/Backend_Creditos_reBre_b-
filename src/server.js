@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
+import TelegramBot from "node-telegram-bot-api"
 
 dotenv.config()
 
@@ -27,6 +28,25 @@ app.use("/auth", authRoutes)
 app.use("/users", userRoutes)
 app.use("/clientes", clienteRoutes)
 app.use("/creditos", creditoRoutes)
+
+// 🔹 Telegram Bot
+const token = process.env.TELEGRAM_BOT_TOKEN
+const bot = new TelegramBot(token)
+
+// Configurar webhook (Telegram enviará mensajes aquí)
+bot.setWebHook(`https://creditos-re-bre-b-backend.vercel.app/api/telegram/${token}`)
+
+// Endpoint para recibir mensajes de Telegram
+app.post(`/api/telegram/${token}`, (req, res) => {
+  bot.processUpdate(req.body)
+  res.sendStatus(200)
+})
+
+// Ejemplo de respuesta automática
+bot.on("message", (msg) => {
+  const chatId = msg.chat.id
+  bot.sendMessage(chatId, `Hola ${msg.from.first_name}, recibí tu mensaje: ${msg.text}`)
+})
 
 // Solo escuchar en desarrollo local (Vercel no usa listen)
 if (process.env.NODE_ENV !== "production") {
